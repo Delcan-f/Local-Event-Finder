@@ -1,0 +1,28 @@
+{
+  "name": "local-event-finder",
+  "version": "1.0.0",
+  "description": "A Web application that helps users discover local events based on their interests, location and available dates. Events can include Concerts, Festivals, Workshops or Meetups. The platform will allow users to filter events by categories, location, price, and date. If I have enough time the app could also have the ability to save and share events.",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node --watch src/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Delcan-f/Local-Event-Finder.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Delcan-f/Local-Event-Finder/issues"
+  },
+  "homepage": "https://github.com/Delcan-f/Local-Event-Finder#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "helmet": "^8.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.12.1"
+  }
+}
