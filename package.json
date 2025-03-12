@@ -4,7 +4,9 @@
   "description": "A Web application that helps users discover local events based on their interests, location and available dates. Events can include Concerts, Festivals, Workshops or Meetups. The platform will allow users to filter events by categories, location, price, and date. If I have enough time the app could also have the ability to save and share events.",
   "main": "index.js",
   "scripts": {
-    "dev": "node --watch src/server.js"
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "test": "jest --watch"
   },
   "repository": {
     "type": "git",

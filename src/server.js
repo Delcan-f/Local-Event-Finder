@@ -1,22 +1,34 @@
-// Import express to use it
-const express = require("express"); 
-const { default: mongoose } = require("mongoose");
-const cors = require("cors")
-
-// Creates an instance of the express server
+const express = require("express");
 const app = express();
 
-app.get("/", (request, response, next) => {
-    console.log("Server Starting!")
-    response.json({message: "Server Started"})
-})
+app.use(express.json());
 
-app.listen(3000)
+const mongoose = require("mongoose");
 
-// // Allows us to send in JSON body data on our requests
-// app.use(express.json());
+let databaseUrl = "";
+switch (process.env.NODE_ENV?.toLocaleLowerCase()) {
+    case "test":
+        databaseUrl = "mongodb://localhost:27017/Local-Event-Finder-test";
+        break;
 
+    case "dev":
+    case "development":
+        databaseUrl = "mongodb://localhost:27017/Local-Event-Finder-dev"
+        break;
 
-module.exports = {
-    app
+    case "production":
+    case "prod":
+        databaseUrl = process.env.DATABASE_URL;
+        break;
+
+    default:
+        console.error("Incorrect environment detected!");
+        process.exit();
 }
+
+const { connect } = require("./database.js");
+if (process.env.NODE_ENV !== "test"){
+    connect(databaseUrl);
+}
+
+module.exports = { app }
