@@ -13,12 +13,24 @@ const EventSchema = new mongoose.Schema({
     },
     date: {
         type: Date,
-        required: true
+        required: true,
+        unique: false
     },
     eventLocation: {
         type: mongoose.Types.ObjectId,
         ref: 'Location',
-        required: true
+        required: true,
+        unique: false
+    },
+    price: {
+        type: Number,
+        unique: false,
+        required: true, 
+    },
+    category: {
+        type: String,
+        unique: false,
+        value: true
     }
 });
 
