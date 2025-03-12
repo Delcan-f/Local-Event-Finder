@@ -15,6 +15,11 @@ const EventSchema = new mongoose.Schema({
         type: Date,
         required: true
     },
+    location: {
+        type: mongoose.Types.ObjectId,
+        ref: 'Location',
+        required: true
+    }
 });
 
 const EventModel = mongoose.model('Event', EventSchema);

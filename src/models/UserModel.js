@@ -21,7 +21,22 @@ const UserSchema = new mongoose.Schema({
         required: true,
         unique: false,
         minLength: 6
-    }
+    },
+    location: {
+        type: mongoose.Types.ObjectId,
+        ref: 'Location',
+        required: true
+    },
+     price: {
+        type: Number,
+        get: v => (v/100).toFixed(2),
+        set: v => v*100
+     },
+     category: {
+        type: String,
+        unique: false,
+        required: true
+     }
 });
 
 const UserModel = mongoose.model('User', UserSchema);

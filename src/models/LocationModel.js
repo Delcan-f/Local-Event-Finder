@@ -7,7 +7,7 @@ const LocationSchema = new mongoose.Schema({
         unique: false
     },
     streetNumber: {
-        type: Integer,
+        type: Number,
         required: true,
         unique: false
     },
