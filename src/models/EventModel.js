@@ -15,7 +15,7 @@ const EventSchema = new mongoose.Schema({
         type: Date,
         required: true
     },
-    location: {
+    eventLocation: {
         type: mongoose.Types.ObjectId,
         ref: 'Location',
         required: true

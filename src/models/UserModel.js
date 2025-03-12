@@ -22,7 +22,7 @@ const UserSchema = new mongoose.Schema({
         unique: false,
         minLength: 6
     },
-    location: {
+    userLocation: {
         type: mongoose.Types.ObjectId,
         ref: 'Location',
         required: true
