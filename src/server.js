@@ -1,7 +1,7 @@
 const express = require("express");
 const { connect } = require("./database");
 const mainRouter = require("./routes/MainRouter");
-const errorHandler = require("./middleware/errorHandler");
+const errorHandler = require("./middlewares/errorHandler");
 
 const app = express();
 

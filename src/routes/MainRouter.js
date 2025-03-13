@@ -1,11 +1,11 @@
 const express = require("express");
 const router = express.Router();
 
-const userRouter = require("./userRouter");
-const eventRouter = require("./eventRouter");
-const bookingRouter = require("./bookingRouter");
-const reviewRouter = require("./reviewRouter");
-const locationRouter = require("./locationRouter");
+const userRouter = require("./UserRoutes");
+const eventRouter = require("./EventRoutes");
+const bookingRouter = require("./BookingRoutes");
+const reviewRouter = require("./ReviewRoutes");
+const locationRouter = require("./LocationRoutes");
 
 // Middleware for logging requests
 router.use((req, res, next) => {

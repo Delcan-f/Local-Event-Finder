@@ -28,9 +28,6 @@ const LocationSchema = new mongoose.Schema({
     }
 }, { timestamps: true });
 
-// Indexing for faster lookups
-LocationSchema.index({ street, streetNumber, city, state, country });
-
 const Location = mongoose.model('Location', LocationSchema);
 
 module.exports = {
