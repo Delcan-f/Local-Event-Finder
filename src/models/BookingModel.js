@@ -20,8 +20,8 @@ const BookingSchema = new mongoose.Schema({
     }
 });
 
-const BookingModel = mongoose.model('Booking', BookingSchema);
+const Booking = mongoose.model('Booking', BookingSchema);
 
 module.exports = {
-    BookingModel
+    Booking
 }
