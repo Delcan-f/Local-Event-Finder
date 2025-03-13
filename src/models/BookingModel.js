@@ -14,10 +14,8 @@ const BookingSchema = new mongoose.Schema({
     bookingStatus: {
         type: String,
         required: true,
-        enum: ['pending', 'confirmed', 'cancelled'] // Example for enum validation
+        enum: ['pending', 'confirmed', 'cancelled']
     }
-}, {
-    timestamps: true // Optional: Adds createdAt and updatedAt fields automatically
 });
 
 // Optional: Add indexes to improve performance on common queries
