@@ -84,7 +84,7 @@ router.patch("/:userId", async (request, response) => {
             return response.status(404).json({message: "Unable to find user"});
         }
 
-        response.status(200).json(updatdUser);
+        response.status(200).json(updatedUser);
     } catch (error) {
         console.error("Error updating user:", error);
         response.status(400).json({message: "Error updating user"});

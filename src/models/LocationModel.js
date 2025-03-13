@@ -4,27 +4,32 @@ const LocationSchema = new mongoose.Schema({
     street: {
         type: String,
         required: true,
-        unique: false
+        unique: false,
+        trim: true
     },
     streetNumber: {
-        type: Number,
+        type: String,
         required: true,
-        unique: false
+        unique: false,
+        trim: true
     },
     city: {
         type: String,
         required: true,
-        unique: false
+        unique: false,
+        trim: true
     },
     state: {
         type: String,
         required: true,
-        unique: false
+        unique: false,
+        trim: true
     },
     country: {
         type: String,
         required: true,
-        unique: false
+        unique: false,
+        trim: true
     }
 });
 
