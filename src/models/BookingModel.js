@@ -14,12 +14,20 @@ const BookingSchema = new mongoose.Schema({
     bookingStatus: {
         type: String,
         required: true,
-        enum: ['pending', 'confirmed', 'cancelled']
+        enum: ['pending', 'confirmed', 'cancelled'],
+        default: 'pending' // Default status when a booking is created
+    },
+    bookingDate: {
+        type: Date,
+        default: Date.now, // Automatically set to current time
+        required: true
     }
-});
+}, { timestamps: true });
 
-// Optional: Add indexes to improve performance on common queries
-BookingSchema.index({ bookingUser: 1, bookingEvent: 1 });
+// Indexing for better query performance
+BookingSchema.index({ bookingUser: 1 });
+BookingSchema.index({ bookingEvent: 1 });
+BookingSchema.index({ bookingStatus: 1 });
 
 const Booking = mongoose.model('Booking', BookingSchema);
 
