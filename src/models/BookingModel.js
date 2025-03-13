@@ -5,7 +5,7 @@ const BookingSchema = new mongoose.Schema({
         type: mongoose.Types.ObjectId,
         ref: 'User',
         required: true,
-        unique: true // could be false
+        unique: false 
     },
     bookingEvent: {
         type: mongoose.Types.ObjectId,
