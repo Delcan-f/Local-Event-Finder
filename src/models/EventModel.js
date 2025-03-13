@@ -9,7 +9,7 @@ const EventSchema = new mongoose.Schema({
     description: {
         type: String,
         required: true,
-        unique: true
+        unique: false
     },
     date: {
         type: Date,
@@ -24,13 +24,14 @@ const EventSchema = new mongoose.Schema({
     },
     price: {
         type: Number,
-        unique: false,
-        required: true, 
+        required: true,
+        unique: false
     },
     category: {
         type: String,
-        unique: false,
-        value: true
+        enum: ['music', 'sports', 'art', 'education', 'recreation'],
+        required: true,
+        unique: false
     }
 });
 
@@ -38,4 +39,4 @@ const Event = mongoose.model('Event', EventSchema);
 
 module.exports = {
     Event
-}
+};
