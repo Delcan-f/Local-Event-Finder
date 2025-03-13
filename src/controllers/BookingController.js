@@ -3,20 +3,19 @@ const { User } = require("../models/UserModel");
 const { Event } = require("../models/EventModel");
 const { Location } = require("../models/LocationModel");
 
-async function getBookings(req, res) {
+async function getBookings(req, res, next) {
     try {
         const bookings = await Booking.find()
             .populate('bookingUser')
             .populate('bookingEvent')
             .populate('bookingLocation');
-        return res.status(200).json(bookings);  // Return all bookings
+        res.status(200).json(bookings);
     } catch (err) {
-        console.error("Error fetching bookings:", err);
-        return res.status(500).json({ error: "Unable to fetch bookings." });
+        next(err);
     }
 }
 
-async function getBooking(req, res) {
+async function getBooking(req, res, next) {
     const { bookingId } = req.params;
     try {
         const booking = await Booking.findById(bookingId)
@@ -26,17 +25,15 @@ async function getBooking(req, res) {
         if (!booking) {
             return res.status(404).json({ error: "Booking not found" });
         }
-        return res.status(200).json(booking);
+        res.status(200).json(booking);
     } catch (err) {
-        console.error("Error fetching booking:", err);
-        return res.status(500).json({ error: "Unable to fetch booking." });
+        next(err);
     }
 }
 
-async function createBooking(req, res) {
+async function createBooking(req, res, next) {
     const { userId, eventId, locationId, bookingStatus } = req.body;
     try {
-        // Validate if the user, event, and location exist
         const user = await User.findById(userId);
         const event = await Event.findById(eventId);
         const location = await Location.findById(locationId);
@@ -45,56 +42,49 @@ async function createBooking(req, res) {
             return res.status(400).json({ error: "User, Event, or Location not found" });
         }
 
-        // Create new booking
         const newBooking = await Booking.create({
             bookingUser: userId,
             bookingEvent: eventId,
             bookingLocation: locationId,
-            bookingStatus: bookingStatus || 'Pending'  // Default to 'Pending' if no status is provided
+            bookingStatus: bookingStatus || 'Pending'
         });
 
-        return res.status(201).json(newBooking);  // Return the newly created booking
+        res.status(201).json(newBooking);
     } catch (err) {
-        console.error("Error creating booking:", err);
-        return res.status(400).json({ error: "Unable to create booking." });
+        next(err);
     }
 }
 
-// Update a booking's status
-async function updateBooking(req, res) {
+async function updateBooking(req, res, next) {
     const { bookingId } = req.params;
     const { bookingStatus } = req.body;
     try {
-        // Check if booking exists
         const booking = await Booking.findByIdAndUpdate(
             bookingId, 
             { bookingStatus }, 
-            { new: true }  // Return the updated booking
+            { new: true }
         );
 
         if (!booking) {
             return res.status(404).json({ error: "Booking not found" });
         }
 
-        return res.status(200).json(booking);  // Return the updated booking
+        res.status(200).json(booking);
     } catch (err) {
-        console.error("Error updating booking:", err);
-        return res.status(400).json({ error: "Unable to update booking." });
+        next(err);
     }
 }
 
-// Delete a booking
-async function deleteBooking(req, res) {
+async function deleteBooking(req, res, next) {
     const { bookingId } = req.params;
     try {
         const deletedBooking = await Booking.findByIdAndDelete(bookingId);
         if (!deletedBooking) {
             return res.status(404).json({ error: "Booking not found" });
         }
-        return res.status(200).json({ message: "Booking deleted successfully" });
+        res.status(200).json({ message: "Booking deleted successfully" });
     } catch (err) {
-        console.error("Error deleting booking:", err);
-        return res.status(500).json({ error: "Unable to delete booking." });
+        next(err);
     }
 }
 

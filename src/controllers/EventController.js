@@ -1,61 +1,59 @@
 const { Event } = require("../models/EventModel");
 
-async function getEvents() {
+async function getEvents(req, res, next) {
     try {
         const events = await Event.find();
-        return events;
+        res.status(200).json(events);
     } catch (err) {
-        console.error("Error fetching events:", err);
-        throw new Error("Unable to fetch events.");
+        next(err);
     }
 }
 
-async function getEvent(eventId) {
+async function getEvent(req, res, next) {
+    const { eventId } = req.params;
     try {
         const event = await Event.findById(eventId);
         if (!event) {
-            throw new Error("Event not found");
+            return res.status(404).json({ error: "Event not found" });
         }
-        return event;
+        res.status(200).json(event);
     } catch (err) {
-        console.error("Error fetching event:", err);
-        throw new Error("Unable to fetch event.");
+        next(err);
     }
 }
 
-async function createEvent(event) {
+async function createEvent(req, res, next) {
     try {
-        const newEvent = await Event.create(event);
-        return newEvent;
+        const newEvent = await Event.create(req.body);
+        res.status(201).json(newEvent);
     } catch (err) {
-        console.error("Error creating event:", err);
-        throw new Error("Unable to create event.");
+        next(err);
     }
 }
 
-async function updateEvent(eventId, event) {
+async function updateEvent(req, res, next) {
+    const { eventId } = req.params;
     try {
-        const updatedEvent = await Event.findByIdAndUpdate(eventId, event, { new: true });
+        const updatedEvent = await Event.findByIdAndUpdate(eventId, req.body, { new: true });
         if (!updatedEvent) {
-            throw new Error("Event not found to update");
+            return res.status(404).json({ error: "Event not found to update" });
         }
-        return updatedEvent;
+        res.status(200).json(updatedEvent);
     } catch (err) {
-        console.error("Error updating event:", err);
-        throw new Error("Unable to update event.");
+        next(err);
     }
 }
 
-async function deleteEvent(eventId) {
+async function deleteEvent(req, res, next) {
+    const { eventId } = req.params;
     try {
         const deletedEvent = await Event.findByIdAndDelete(eventId);
         if (!deletedEvent) {
-            throw new Error("Event not found to delete");
+            return res.status(404).json({ error: "Event not found to delete" });
         }
-        return deletedEvent;
+        res.status(200).json({ message: "Event deleted successfully" });
     } catch (err) {
-        console.error("Error deleting event:", err);
-        throw new Error("Unable to delete event.");
+        next(err);
     }
 }
 

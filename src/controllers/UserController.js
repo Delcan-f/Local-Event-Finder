@@ -1,71 +1,80 @@
-const { User } = require('../models/UserModel')
+const { User } = require("../models/UserModel");
 
-async function getUsers() {
+// Get all users
+async function getUsers(req, res, next) {
     try {
         const users = await User.find();
-        return users;
+        res.status(200).json(users);
     } catch (err) {
-        console.error("Error finding users:", err);
-        throw new Error("Unable to find users.")
+        next(err);
     }
 }
 
-async function getUser(userId) {
+// Get a single user
+async function getUser(req, res, next) {
     try {
+        const { userId } = req.params;
         const user = await User.findById(userId);
+
         if (!user) {
-            throw new Error("User not found");
+            return res.status(404).json({ error: "User not found" });
         }
-        return user;
+
+        res.status(200).json(user);
     } catch (err) {
-        console.error("error finding user:", err);
-        throw new Error("Unable to find user.");
+        next(err);
     }
-};
+}
 
-
-async function createUser(user) {
+// Create a new user
+async function createUser(req, res, next) {
     try {
-        const newUser = await User.create(user);
-        return newUser;
+        const newUser = await User.create(req.body);
+        res.status(201).json(newUser);
     } catch (err) {
-        console.error("Error creating user:", err);
-        throw new Error("Unable to create user.")
+        next(err);
     }
-};
+}
 
-async function updateUser(userId, user) {
+// Update user
+async function updateUser(req, res, next) {
     try {
-        const updatedUser = await User.findByIdAndUpdate(userId, user, { new: true });
+        const { userId } = req.params;
+        const updatedUser = await User.findByIdAndUpdate(userId, req.body, {
+            new: true,
+            runValidators: true,
+        });
+
         if (!updatedUser) {
-            throw new Error("User not found to update");
+            return res.status(404).json({ error: "User not found" });
         }
-        console.log(`User with ID ${userId} updated successfully`);
-        return updatedUser;
-    } catch (err) {
-        console.error("Error updating user:", err);
-        throw new Error("Unable to update user.");
-    }
-};
 
-async function deleteUser(userId) {
-    try {
-        const deletedUser = await User.findByIdAndDelete(userId);
-        if (!deletedUser) {
-            throw new Error("User not found to delete");
-        }
-        console.log(`User with ID ${userId} has been deleted successfully`);
-        return deletedUser;
+        res.status(200).json(updatedUser);
     } catch (err) {
-        console.error("Error deleting user:", err);
-        throw new Error("Unable to delete user.");
+        next(err);
     }
-};
+}
+
+// Delete user
+async function deleteUser(req, res, next) {
+    try {
+        const { userId } = req.params;
+        const deletedUser = await User.findByIdAndDelete(userId);
+
+        if (!deletedUser) {
+            return res.status(404).json({ error: "User not found" });
+        }
+
+        res.status(200).json({ message: "User deleted successfully" });
+    } catch (err) {
+        next(err);
+    }
+}
 
 module.exports = {
     getUsers,
     getUser,
     createUser,
     updateUser,
-    deleteUser
+    deleteUser,
 };

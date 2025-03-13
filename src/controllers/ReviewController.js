@@ -3,124 +3,117 @@ const { User } = require("../models/UserModel");
 const { Event } = require("../models/EventModel");
 
 // Get all reviews for a specific event
-async function getReviewsForEvent(req, res) {
-    const { eventId } = req.params;
+async function getReviewsForEvent(req, res, next) {
     try {
+        const { eventId } = req.params;
         const reviews = await Review.find({ event: eventId })
-            .populate('user')
-            .populate('event'); // 
-        
-        if (reviews.length === 0) {
-            return res.status(404).json({ message: "No reviews found for this event." });
-        }
+            .populate("user")
+            .populate("event");
 
-        return res.status(200).json(reviews);
+        res.status(200).json(reviews);
     } catch (err) {
-        console.error("Error fetching reviews for event:", err);
-        return res.status(500).json({ error: "Unable to fetch reviews." });
+        next(err);
     }
 }
 
-async function getReviewsForUser(req, res) {
-    const { userId } = req.params;
+// Get all reviews for a specific user
+async function getReviewsForUser(req, res, next) {
     try {
+        const { userId } = req.params;
         const reviews = await Review.find({ user: userId })
-            .populate('user')
-            .populate('event');
+            .populate("user")
+            .populate("event");
 
-        if (reviews.length === 0) {
-            return res.status(404).json({ message: "No reviews found for this user." });
-        }
-
-        return res.status(200).json(reviews);
+        res.status(200).json(reviews);
     } catch (err) {
-        console.error("Error fetching reviews for user:", err);
-        return res.status(500).json({ error: "Unable to fetch reviews." });
+        next(err);
     }
 }
 
-async function getReview(req, res) {
-    const { reviewId } = req.params;
+// Get a single review
+async function getReview(req, res, next) {
     try {
+        const { reviewId } = req.params;
         const review = await Review.findById(reviewId)
-            .populate('user')
-            .populate('event');
+            .populate("user")
+            .populate("event");
 
         if (!review) {
             return res.status(404).json({ error: "Review not found" });
         }
 
-        return res.status(200).json(review);
+        res.status(200).json(review);
     } catch (err) {
-        console.error("Error fetching review:", err);
-        return res.status(500).json({ error: "Unable to fetch review." });
+        next(err);
     }
 }
 
-async function createReview(req, res) {
-    const { userId, eventId, rating, comments } = req.body;
-
+// Create a new review
+async function createReview(req, res, next) {
     try {
-        // Validate if the user and event exist
-        const user = await User.findById(userId);
-        const event = await Event.findById(eventId);
+        const { userId, eventId, rating, comments } = req.body;
 
-        if (!user || !event) {
-            return res.status(400).json({ error: "User or Event not found" });
+        if (!userId || !eventId) {
+            return res.status(400).json({ error: "User and Event IDs are required." });
         }
 
-        // Create the new review
+        const [user, event] = await Promise.all([
+            User.findById(userId),
+            Event.findById(eventId),
+        ]);
+
+        if (!user || !event) {
+            return res.status(404).json({ error: "User or Event not found." });
+        }
+
         const newReview = await Review.create({
             user: userId,
             event: eventId,
             rating,
-            comments: comments || ""
+            comments: comments || "",
         });
 
-        return res.status(201).json(newReview);
+        res.status(201).json(newReview);
     } catch (err) {
-        console.error("Error creating review:", err);
-        return res.status(400).json({ error: "Unable to create review." });
+        next(err);
     }
 }
 
-async function updateReview(req, res) {
-    const { reviewId } = req.params;
-    const { rating, comments } = req.body;
-
+// Update a review
+async function updateReview(req, res, next) {
     try {
-        // Check if the review exists
+        const { reviewId } = req.params;
+        const { rating, comments } = req.body;
+
         const updatedReview = await Review.findByIdAndUpdate(
             reviewId,
             { rating, comments },
-            { new: true }  // Return the updated review
+            { new: true, runValidators: true }
         );
 
         if (!updatedReview) {
             return res.status(404).json({ error: "Review not found" });
         }
 
-        return res.status(200).json(updatedReview);  // Return the updated review
+        res.status(200).json(updatedReview);
     } catch (err) {
-        console.error("Error updating review:", err);
-        return res.status(400).json({ error: "Unable to update review." });
+        next(err);
     }
 }
 
 // Delete a review
-async function deleteReview(req, res) {
-    const { reviewId } = req.params;
+async function deleteReview(req, res, next) {
     try {
+        const { reviewId } = req.params;
         const deletedReview = await Review.findByIdAndDelete(reviewId);
 
         if (!deletedReview) {
             return res.status(404).json({ error: "Review not found" });
         }
 
-        return res.status(200).json({ message: "Review deleted successfully" });
+        res.status(200).json({ message: "Review deleted successfully" });
     } catch (err) {
-        console.error("Error deleting review:", err);
-        return res.status(500).json({ error: "Unable to delete review." });
+        next(err);
     }
 }
 
@@ -130,5 +123,5 @@ module.exports = {
     getReview,
     createReview,
     updateReview,
-    deleteReview
+    deleteReview,
 };

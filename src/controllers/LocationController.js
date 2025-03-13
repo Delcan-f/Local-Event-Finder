@@ -1,17 +1,16 @@
 const mongoose = require("mongoose");
 const { Location } = require("../models/LocationModel");
 
-async function getLocations(req, res) {
+async function getLocations(req, res, next) {
     try {
         const locations = await Location.find();
-        return res.status(200).json(locations);
+        res.status(200).json(locations);
     } catch (err) {
-        console.error("Error fetching locations:", err);
-        return res.status(500).json({ error: "Unable to fetch locations." });
+        next(err);
     }
 }
 
-async function getLocation(req, res) {
+async function getLocation(req, res, next) {
     const { locationId } = req.params;
 
     if (!mongoose.Types.ObjectId.isValid(locationId)) {
@@ -23,29 +22,22 @@ async function getLocation(req, res) {
         if (!location) {
             return res.status(404).json({ error: "Location not found." });
         }
-        return res.status(200).json(location);
+        res.status(200).json(location);
     } catch (err) {
-        console.error("Error fetching location:", err);
-        return res.status(500).json({ error: "Unable to fetch location." });
+        next(err);
     }
 }
 
-async function createLocation(req, res) {
+async function createLocation(req, res, next) {
     try {
         const newLocation = await Location.create(req.body);
-        return res.status(201).json(newLocation);
+        res.status(201).json(newLocation);
     } catch (err) {
-        console.error("Error creating location:", err);
-
-        if (err.name === "ValidationError") {
-            return res.status(422).json({ error: err.message });
-        }
-
-        return res.status(400).json({ error: "Unable to create location." });
+        next(err);
     }
 }
 
-async function updateLocation(req, res) {
+async function updateLocation(req, res, next) {
     const { locationId } = req.params;
 
     if (!mongoose.Types.ObjectId.isValid(locationId)) {
@@ -54,24 +46,16 @@ async function updateLocation(req, res) {
 
     try {
         const updatedLocation = await Location.findByIdAndUpdate(locationId, req.body, { new: true, runValidators: true });
-        
         if (!updatedLocation) {
             return res.status(404).json({ error: "Location not found." });
         }
-
-        return res.status(200).json(updatedLocation);
+        res.status(200).json(updatedLocation);
     } catch (err) {
-        console.error("Error updating location:", err);
-
-        if (err.name === "ValidationError") {
-            return res.status(422).json({ error: err.message });
-        }
-
-        return res.status(400).json({ error: "Unable to update location." });
+        next(err);
     }
 }
 
-async function deleteLocation(req, res) {
+async function deleteLocation(req, res, next) {
     const { locationId } = req.params;
 
     if (!mongoose.Types.ObjectId.isValid(locationId)) {
@@ -83,10 +67,9 @@ async function deleteLocation(req, res) {
         if (!deletedLocation) {
             return res.status(404).json({ error: "Location not found." });
         }
-        return res.status(200).json({ message: "Location deleted successfully." });
+        res.status(200).json({ message: "Location deleted successfully." });
     } catch (err) {
-        console.error("Error deleting location:", err);
-        return res.status(500).json({ error: "Unable to delete location." });
+        next(err);
     }
 }
 

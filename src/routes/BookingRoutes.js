@@ -6,86 +6,55 @@ const {
     createBooking,
     updateBooking,
     deleteBooking
-} = require("../controllers/BookingController")
+} = require("../controllers/BookingController");
 
 // Get all bookings
-router.get('/', async (request, response) => {
+router.get('/', async (req, res, next) => {
     try {
         const bookings = await getBookings();
-        response.status(200).json(bookings);
+        res.status(200).json(bookings);
     } catch (error) {
-        console.error("Error getting bookings:", error);
-        response.status(500).json({message: "Error getting bookings"});
+        next(error);
     }
 });
 
 // Get a single booking using booking ID
-router.get("/:bookingId", async (request, response) => {
-    const { bookingId } = request.params;
+router.get("/:bookingId", async (req, res, next) => {
     try {
-        const booking = await getBooking(bookingId);
-        if (!booking) {
-            return response.status(404).json({message: "Booking not found"});
-        }
-        response.status(200).json(booking);
+        const booking = await getBooking(req.params.bookingId);
+        res.status(200).json(booking);
     } catch (error) {
-        console.error("Error fetching booking", error);
-        response.status(500).json({message: "Error fetching booking"});
+        next(error);
     }
 });
 
 // Create a new booking
-router.post('/', async (request, response) => {
-    const { bookingUser, bookingEvent, bookingStatus } = request.body;
-
+router.post('/', async (req, res, next) => {
     try {
-        const newBooking = await createBooking({
-            bookingUser,
-            bookingEvent,
-            bookingStatus
-        });
-        response.status(201).json(newBooking);
+        const newBooking = await createBooking(req.body);
+        res.status(201).json(newBooking);
     } catch (error) {
-        console.error("Unable to create booking", error);
-        response.status(400).json({message: "Unable to create booking"});
+        next(error);
     }
 });
 
 // Update existing booking using booking ID
-router.patch('/:bookingId', async (request, response) => {
-    const { bookingId } = request.params;
-    const { bookingUser, bookingEvent, bookingStatus } = request.body;
-
-    const updateData = {};
-    if (bookingUser) updateData.bookingUser = bookingUser;
-    if (bookingEvent) updateData.bookingEvent = bookingEvent;
-    if (bookingStatus) updateData.bookingStatus - bookingStatus;
-
+router.patch('/:bookingId', async (req, res, next) => {
     try {
-        const updatedBooking = await updateBooking(bookingId, updateData);
-
-        if (!updatedBooking) {
-            return response.status(404).json({message: "Unable to find booking"});
-        }
-        response.status(200).json(updatedBooking);
+        const updatedBooking = await updateBooking(req.params.bookingId, req.body);
+        res.status(200).json(updatedBooking);
     } catch (error) {
-        console.error("Error updating booking:", error);
-        response.status(400).json({message: "Error updating booking"});
+        next(error);
     }
 });
 
 // Delete existing booking using booking ID
-router.delete('/:bookingId', async (request, response) => {
-    const { bookingId } = request.params;
+router.delete('/:bookingId', async (req, res, next) => {
     try {
-        const deletedBooking = await deleteBooking(bookingId);
-        if (!deletedBooking) {
-            return response.status(404).json({message: "Booking not found"});
-        }
-        response.status(200).json({message: "Booking deleted successfully"});
+        await deleteBooking(req.params.bookingId);
+        res.status(200).json({ message: "Booking deleted successfully" });
     } catch (error) {
-        console.error("Unable to delete booking", error);
-        response.status(500).json({message: "Unable to delete booking"});
+        next(error);
     }
 });
 

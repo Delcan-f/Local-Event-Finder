@@ -9,100 +9,58 @@ const {
 } = require("../controllers/UserController");
 
 // Get all users
-router.get('/', async (request, response) => {
+router.get('/', async (req, res, next) => {
     try {
         const users = await getUsers();
-        response.status(200).json(users);
+        res.status(200).json(users);
     } catch (error) {
-        console.error("Error getting users:", error);
-        response.status(500).json({message: "Error getting users"});
+        next(error);
     }
 });
 
-// Get one user using userId
-router.get('/:userId', async (request, response) => {
-    const { userId } = request.params;
+// Get one user by ID
+router.get('/:userId', async (req, res, next) => {
     try {
-        const user = await getUser(userId);
+        const user = await getUser(req.params.userId);
         if (!user) {
-            return response.status(404).json({message: `User with id ${userId} not found`});
+            return res.status(404).json({ message: `User with ID ${req.params.userId} not found` });
         }
-        response.status(200).json(user);
+        res.status(200).json(user);
     } catch (error) {
-        console.error("Error finding user:", error);
-        response.status(500).json({message: "Error getting user"});
+        next(error);
     }
 });
 
-// Create new user
-router.post('/', async (request, response) => {
-    const {
-        firstName,
-        lastName,
-        email,
-        password,
-        userLocation
-    } = request.body;
-
+// Create a new user
+router.post('/', async (req, res, next) => {
     try {
-        const newUser = await createUser({
-            firstName,
-            lastName,
-            email,
-            password,
-            userLocation,
-        });
-        response.status(201).json(newUser);
+        const newUser = await createUser(req.body);
+        res.status(201).json(newUser);
     } catch (error) {
-        console.error("Error creating new user:", error);
-        response.status(400).json({message: "Error creating new user."});
+        next(error);
     }
 });
 
-// Update existing user
-router.patch("/:userId", async (request, response) => {
-    const { userId } = request.params;
-    const { 
-        firstName,
-        lastName,
-        email,
-        password,
-        userLocation
-    } = request.body;
-
-    const updateData = {};
-    if (firstName) updateData.firstName = firstName;
-    if (lastName) updateData.lastName = lastName;
-    if (email) updateData.email = email;
-    if (password) updateData.password = password;
-    if (userLocation) updateData.userLocation = userLocation;
-
+// Update an existing user
+router.patch("/:userId", async (req, res, next) => {
     try {
-        const updatedUser = await updateUser(userId, updateData);
-
+        const updatedUser = await updateUser(req.params.userId, req.body);
         if (!updatedUser) {
-            return response.status(404).json({message: "Unable to find user"});
+            return res.status(404).json({ message: "User not found" });
         }
-
-        response.status(200).json(updatedUser);
+        res.status(200).json(updatedUser);
     } catch (error) {
-        console.error("Error updating user:", error);
-        response.status(400).json({message: "Error updating user"});
+        next(error);
     }
 });
 
-// Delete existing user
-router.delete('/:userId', async (request, response) => {
-    const { userId } = request.params;
+// Delete an existing user
+router.delete('/:userId', async (req, res, next) => {
     try {
-        const deletedUser = await deleteUser(userId);
-        if (!deletedUser) {
-            return response.status(404).json({message: "Unable to find user"});
-        }
-        response.status(200).json({ message: "User deleted successfully"});
+        await deleteUser(req.params.userId);
+        res.status(200).json({ message: "User deleted successfully" });
     } catch (error) {
-        console.error("Error deleting user:", error);
-        response.status(500).json({message: "Error deleting user"});
+        next(error);
     }
 });
 

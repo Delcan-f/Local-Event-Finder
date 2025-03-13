@@ -9,93 +9,53 @@ const {
 } = require("../controllers/EventController");
 
 // Get all events
-router.get("/", async (req, res) => {
+router.get("/", async (req, res, next) => {
     try {
         const events = await getEvents();
         res.status(200).json(events);
     } catch (error) {
-        console.error("Error fetching events:", error);
-        res.status(500).json({ message: "Error fetching events" });
+        next(error);
     }
 });
 
 // Get a specific event by ID
-router.get("/:eventId", async (req, res) => {
-    const { eventId } = req.params;
+router.get("/:eventId", async (req, res, next) => {
     try {
-        const event = await getEvent(eventId);
-        if (!event) {
-            return res.status(404).json({ message: "Event not found" });
-        }
+        const event = await getEvent(req.params.eventId);
         res.status(200).json(event);
     } catch (error) {
-        console.error("Error fetching event:", error);
-        res.status(500).json({ message: "Error fetching event" });
+        next(error);
     }
 });
 
 // Create a new event
-router.post("/", async (req, res) => {
-    const { name, description, date, eventLocation, price, category } = req.body;
-
+router.post("/", async (req, res, next) => {
     try {
-        const newEvent = await createEvent({
-            name,
-            description,
-            date,
-            eventLocation,
-            price,
-            category
-        });
+        const newEvent = await createEvent(req.body);
         res.status(201).json(newEvent);
     } catch (error) {
-        console.error("Error creating event:", error);
-        res.status(400).json({ message: "Error creating event" });
+        next(error);
     }
 });
 
 // Update an existing event by ID
-router.patch("/:eventId", async (req, res) => {
-    const { eventId } = req.params;
-    const { name, description, date, eventLocation, price, category } = req.body;
-
-    const updateData = {};
-    if (name) updateData.name = name;
-    if (description) updateData.description = description;
-    if (date) updateData.date = date;
-    if (eventLocation) updateData.eventLocation = eventLocation;
-    if (price) updateData.price = price;
-    if (category) updateData.category = category;
-
+router.patch("/:eventId", async (req, res, next) => {
     try {
-        const updatedEvent = await updateEvent(eventId, updateData);
-
-        if (!updatedEvent) {
-            return res.status(404).json({ message: "Event not found" });
-        }
-
+        const updatedEvent = await updateEvent(req.params.eventId, req.body);
         res.status(200).json(updatedEvent);
     } catch (error) {
-        console.error("Error updating event:", error);
-        res.status(400).json({ message: "Error updating event" });
+        next(error);
     }
 });
 
 // Delete an event by ID
-router.delete("/:eventId", async (req, res) => {
-    const { eventId } = req.params;
+router.delete("/:eventId", async (req, res, next) => {
     try {
-        const deletedEvent = await deleteEvent(eventId);
-        if (!deletedEvent) {
-            return res.status(404).json({ message: "Event not found" });
-        }
+        await deleteEvent(req.params.eventId);
         res.status(200).json({ message: "Event deleted successfully" });
     } catch (error) {
-        console.error("Error deleting event:", error);
-        res.status(500).json({ message: "Error deleting event" });
+        next(error);
     }
 });
-
-
 
 module.exports = router;
