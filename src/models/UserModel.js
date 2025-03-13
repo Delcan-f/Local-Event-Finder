@@ -28,16 +28,6 @@ const UserSchema = new mongoose.Schema({
         ref: 'Location',
         required: true
     },
-    price: {
-        type: Number,
-        get: v => (v / 100).toFixed(2),
-        set: v => v * 100
-    },
-    category: {
-        type: String,
-        unique: false,
-        required: true
-    }
 });
 
 UserSchema.pre('save', async function(next) {

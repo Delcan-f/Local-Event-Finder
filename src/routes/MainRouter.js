@@ -1,0 +1,20 @@
+const express = require("express");
+const router = express.Router();
+
+const userRouter = require("./userRouter");
+const eventRouter = require("./eventRouter");
+const bookingRouter = require("./bookingRouter");
+const reviewRouter = require("./reviewRouter");
+const locationRouter = require("./locationRouter");
+
+router.use("/users", userRouter);
+router.use("/events", eventRouter);
+router.use("/bookings", bookingRouter);  
+router.use("/reviews", reviewRouter);
+router.use("/locations", locationRouter);
+
+router.get("/", (request, response) => {
+    response.status(200).json({ message: "Welcome to the API!" });
+});
+
+module.exports = router;

@@ -8,12 +8,12 @@ const mongoose = require("mongoose");
 let databaseUrl = "";
 switch (process.env.NODE_ENV?.toLocaleLowerCase()) {
     case "test":
-        databaseUrl = "mongodb://localhost:27017/Local-Event-Finder-test";
+        databaseUrl = "mongodb://0.0.0.0:27017/Local-Event-Finder-test";
         break;
 
     case "dev":
     case "development":
-        databaseUrl = "mongodb://localhost:27017/Local-Event-Finder-dev"
+        databaseUrl = "mongodb://0.0.0.0:27017/Local-Event-Finder-dev"
         break;
 
     case "production":
