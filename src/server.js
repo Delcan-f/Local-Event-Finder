@@ -1,34 +1,12 @@
 const express = require("express");
-const app = express();
+const { connect } = require("./database");
 
+const app = express();
 app.use(express.json());
 
-const mongoose = require("mongoose");
-
-let databaseUrl = "";
-switch (process.env.NODE_ENV?.toLocaleLowerCase()) {
-    case "test":
-        databaseUrl = "mongodb://0.0.0.0:27017/Local-Event-Finder-test";
-        break;
-
-    case "dev":
-    case "development":
-        databaseUrl = "mongodb://0.0.0.0:27017/Local-Event-Finder-dev"
-        break;
-
-    case "production":
-    case "prod":
-        databaseUrl = process.env.DATABASE_URL;
-        break;
-
-    default:
-        console.error("Incorrect environment detected!");
-        process.exit();
+// Connect to the database (except in test environments)
+if (process.env.NODE_ENV !== "test") {
+    connect();
 }
 
-const { connect } = require("./database.js");
-if (process.env.NODE_ENV !== "test"){
-    connect(databaseUrl);
-}
-
-module.exports = { app }
+module.exports = { app };
