@@ -24,8 +24,8 @@ async function connect() {
     
     try {
         await mongoose.connect(databaseUrl, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
+            // useNewUrlParser: true,
+            // useUnifiedTopology: true,
         });
         console.log("Database connected successfully!");
     } catch (error) {

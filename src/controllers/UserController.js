@@ -18,7 +18,7 @@ const getUser = async (req, res) => {
     try {
         const user = await User.findById(userId);
         if (!user) {
-            return res.status(404).json({ message: "User not found." });
+            return res.status(404).json({ message: `User with ID ${userId} not found.` });
         }
         res.status(200).json(user);
     } catch (error) {
@@ -35,22 +35,22 @@ const createUser = async (req, res) => {
 
         // Validate required fields
         if (!firstName || !lastName || !email || !password) {
-            return res.status(400).json({ message: "All fields are required." });
+            return res.status(400).json({ message: "All fields are required: firstName, lastName, email, and password." });
+        }
+
+        // Check if email already exists
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+            return res.status(400).json({ message: "Email already in use. Please use a different email." });
         }
 
         // Create new user
-        const newUser = await User.create({
-            firstName,
-            lastName,
-            email,
-            password,
-            userLocation,
-        });
+        const newUser = await User.create({ firstName, lastName, email, password, userLocation });
 
         res.status(201).json(newUser);
     } catch (error) {
         console.error("Error creating user:", error);
-        res.status(400).json({ message: "Error creating user." });
+        res.status(500).json({ message: "Error creating user." });
     }
 };
 
@@ -58,6 +58,10 @@ const createUser = async (req, res) => {
 const updateUser = async (req, res) => {
     const { userId } = req.params;
     const { firstName, lastName, email, password, userLocation } = req.body;
+
+    if (!firstName && !lastName && !email && !password && !userLocation) {
+        return res.status(400).json({ message: "At least one field must be provided for an update." });
+    }
 
     const updateData = {};
     if (firstName) updateData.firstName = firstName;
@@ -70,13 +74,13 @@ const updateUser = async (req, res) => {
         const updatedUser = await User.findByIdAndUpdate(userId, updateData, { new: true });
 
         if (!updatedUser) {
-            return res.status(404).json({ message: "User not found." });
+            return res.status(404).json({ message: `User with ID ${userId} not found.` });
         }
 
         res.status(200).json(updatedUser);
     } catch (error) {
         console.error("Error updating user:", error);
-        res.status(400).json({ message: "Error updating user." });
+        res.status(500).json({ message: "Error updating user." });
     }
 };
 
@@ -86,7 +90,7 @@ const deleteUser = async (req, res) => {
     try {
         const deletedUser = await User.findByIdAndDelete(userId);
         if (!deletedUser) {
-            return res.status(404).json({ message: "User not found." });
+            return res.status(404).json({ message: `User with ID ${userId} not found.` });
         }
         res.status(200).json({ message: "User deleted successfully." });
     } catch (error) {
