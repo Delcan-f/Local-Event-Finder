@@ -8,15 +8,15 @@ const {
 } = require("../controllers/LocationController");
 
 // Create a new location
-router.post("/", createLocation); // ✅ Pass the function directly
+router.post("/", createLocation);
 
 // Get a specific location by ID
-router.get("/:locationId", getLocation); // ✅ Pass the function directly
+router.get("/:locationId", getLocation);
 
 // Update a location by ID
-router.patch("/:locationId", updateLocation); // ✅ Pass the function directly
+router.patch("/:locationId", updateLocation);
 
 // Delete a location by ID
-router.delete("/:locationId", deleteLocation); // ✅ Pass the function directly
+router.delete("/:locationId", deleteLocation);
 
 module.exports = router;
