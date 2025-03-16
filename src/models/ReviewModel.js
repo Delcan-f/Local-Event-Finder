@@ -21,11 +21,10 @@ const ReviewSchema = new mongoose.Schema({
         type: String,
         minlength: [5, 'Comments must be at least 5 characters long'],
         maxlength: [500, 'Comments cannot be longer than 500 characters'],
-        trim: true // Trim whitespace for cleaner input
+        trim: true
     }
 }, { timestamps: true });
 
-// Index for better querying
 ReviewSchema.index({ user: 1, event: 1 });
 
 const Review = mongoose.model('Review', ReviewSchema);

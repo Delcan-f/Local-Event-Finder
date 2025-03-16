@@ -29,7 +29,7 @@ router.get("/", (req, res) => {
 router.all("*", (req, res, next) => {
     const error = new Error(`Route ${req.originalUrl} not found`);
     error.status = 404;
-    next(error);  // Pass error to global error handler
+    next(error);
 });
 
 module.exports = router;

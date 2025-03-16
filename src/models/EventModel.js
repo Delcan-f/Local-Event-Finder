@@ -14,7 +14,7 @@ const EventSchema = new mongoose.Schema({
     date: {
         type: Date,
         required: true,
-        index: true // Index for faster queries
+        index: true
     },
     eventLocation: {
         type: mongoose.Types.ObjectId,
@@ -24,14 +24,14 @@ const EventSchema = new mongoose.Schema({
     price: {
         type: Number,
         required: true,
-        min: 0 // Ensuring price is not negative
+        min: 0
     },
     category: {
         type: String,
         enum: ['music', 'sports', 'art', 'education', 'recreation'],
         required: true,
         trim: true,
-        index: true // Useful for filtering events by category
+        index: true
     }
 });
 
