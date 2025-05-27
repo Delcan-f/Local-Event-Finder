@@ -5,11 +5,11 @@ async function connect() {
 
     switch (process.env.NODE_ENV?.toLowerCase()) {
         case "test":
-            databaseUrl = "mongodb://0.0.0.0:27017/Local-Event-Finder-test";
+            databaseUrl = "mongodb://localhost:27017/Local-Event-Finder-test";
             break;
         case "dev":
         case "development":
-            databaseUrl = "mongodb://0.0.0.0:27017/Local-Event-Finder-dev";
+            databaseUrl = "mongodb://localhost:27017/Local-Event-Finder-dev";
             break;
         case "production":
         case "prod":

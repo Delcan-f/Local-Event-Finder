@@ -28,30 +28,30 @@ const UserSchema = new mongoose.Schema({
     userLocation: {
         type: mongoose.Types.ObjectId,
         ref: 'Location',
-        required: true
+        required: false
     },
 });
 
-UserSchema.pre('save', async function(next) {
-    if (!this.isModified('password')) return next();
-    try {
-        const salt = await bcrypt.genSalt(10);
-        this.password = await bcrypt.hash(this.password, salt);
-        next();
-    } catch (err) {
-        console.error("Error hashing password:", err);
-        next(err);
-    }
-});
+// UserSchema.pre('save', async function(next) {
+//     if (!this.isModified('password')) return next();
+//     try {
+//         const salt = await bcrypt.genSalt(10);
+//         this.password = await bcrypt.hash(this.password, salt);
+//         next();
+//     } catch (err) {
+//         console.error("Error hashing password:", err);
+//         next(err);
+//     }
+// });
 
-UserSchema.methods.comparePassword = async function(candidatePassword) {
-    try {
-        return await bcrypt.compare(candidatePassword, this.password);
-    } catch (err) {
-        console.error("Password comparison error:", err);
-        throw new Error("Password comparison failed");
-    }
-};
+// UserSchema.methods.comparePassword = async function(candidatePassword) {
+//     try {
+//         return await bcrypt.compare(candidatePassword, this.password);
+//     } catch (err) {
+//         console.error("Password comparison error:", err);
+//         throw new Error("Password comparison failed");
+//     }
+// };
 
 const User = mongoose.model('User', UserSchema);
 

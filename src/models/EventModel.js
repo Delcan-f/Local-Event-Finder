@@ -19,7 +19,7 @@ const EventSchema = new mongoose.Schema({
     eventLocation: {
         type: mongoose.Types.ObjectId,
         ref: 'Location',
-        required: true
+        required: false
     },
     price: {
         type: Number,
