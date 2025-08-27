@@ -1,3 +1,0 @@
-### Note:
-
-During our time to complete the backend component of our full stack assignment I ended up catching COVID, and as I'm immunocompromised I was bed bound for almost 2 weeks. By the time I was able to contribute to our team project a majority of the project had already been completed. I didn't think it was fair on my teammates that I was unable to contribute and it also wasn't a fair reflection of my skills being able to contribute so little. I only had about 5 days but I put together this project in an attempt to showcase the knowledge of the subjects we were taught but I hope it's able to show my understanding of javascript and web API applications. I apologise for not reaching out to the educators earlier to properly explain my situation
